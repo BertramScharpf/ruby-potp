@@ -1,0 +1,84 @@
+#!/usr/bin/env ruby
+
+#
+#  potp  --  The Plain One-Time Password Tool
+#
+
+begin
+  require "appl"
+rescue LoadError
+  puts "This tool requires the `appl` gem."
+  exit 2
+end
+require "potp/foreign/supplement"
+require "potp"
+
+
+class POTP::Appl < Application
+
+  NAME      = "potp"
+  VERSION   = POTP::VERSION
+  SUMMARY   = "Plain One Time Password Tool"
+  COPYRIGHT = "(C) 2024 Bertram Scharpf <software@bertram-scharpf.de>"
+  LICENSE   = "BSD-2-Clause+"
+  AUTHOR    = "Bertram Scharpf <software@bertram-scharpf.de>"
+
+  DESCRIPTION = <<~EOT
+    Generate and validate one time passwords (HOTP & TOTP)
+    according to [RFC 4226] and [RFC 6238].
+
+    Examples:
+
+      potp --secret p4ssword                       # Generates a time-based one-time password
+      potp --hmac --secret p4ssword --counter 42   # Generates a counter-based one-time password
+
+  EOT
+
+  attr_writer :secret, :counter, :digest
+  attr_bang :debug
+  def time! ; @mode = :time ; end
+  def hmac! ; @mode = :hmac ; end
+
+  define_option "t", :time!, true,  "use time-based OTP according to RFC 6238"
+  alias_option  "t", "time"
+
+  define_option "m", :hmac!,     "use counter-based OTP according to RFC 4226"
+  alias_option  "m", "hmac"
+
+  define_option "s", :secret=, "STR",                      "the shared secret"
+  alias_option  "s", "secret"
+
+  define_option "d", :digest=, "ALG", "sha1",       "algorithm for the digest"
+  alias_option  "d", "digest"
+
+  define_option "c", :counter=, "NUM", 0,
+                                      "the counter for counter-based hmac OTP"
+  alias_option  "c", "counter"
+
+  define_option "g", :debug!,         "full Ruby error messages and backtrace"
+  alias_option  "g", "debug"
+  define_option "h", :help,                                     "show options"
+  alias_option  "h", "help"
+  define_option "V", :version,                                  "show version"
+  alias_option  "V", "version"
+
+  def run
+    puts generate_output
+  rescue POTP::Base32::Invalid
+    raise "Secret must be in RFC4648 Base32 format - http://en.wikipedia.org/wiki/Base32#Base_32_Encoding_per_§6"
+  end
+
+  private
+
+  def generate_output
+    @secret.notempty? or raise "You must specify a --secret. See --help."
+    case @mode
+    when :time then (POTP::TOTP.new @secret, digest: @digest).now
+    when :hmac then (POTP::HOTP.new @secret, digest: @digest).at @counter
+    end
+  end
+
+end
+
+POTP::Appl.run
+
