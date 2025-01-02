@@ -27,9 +27,8 @@ module POTP
       fin = now = timeint at||Time.now
       now -= drift_behind     if drift_behind
       fin += drift_ahead      if drift_ahead
-      if after then
-        after += @interval
-        now = after if now < after
+      if after and now < after then
+        now = after + @interval
       end
       now -= now % @interval
       while now < fin do
