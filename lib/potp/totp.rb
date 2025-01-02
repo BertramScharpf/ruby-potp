@@ -15,8 +15,6 @@ module POTP
 
     attr_reader :interval
 
-    # @option options [Integer] interval (30) the time interval in seconds for OTP
-    #     This defaults to 30 which is standard.
     def initialize secret, interval: nil, **kwargs
       @interval = interval || DEFAULT_INTERVAL
       super secret, **kwargs
