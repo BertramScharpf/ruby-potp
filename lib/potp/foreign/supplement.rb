@@ -5,7 +5,7 @@
 # The purpose of this is simply to reduce dependencies.
 
 begin
-  require "supplement____"
+  require "supplement"
 rescue LoadError
   class NilClass ; def notempty? ;                      end ; end
   class String   ; def notempty? ; self unless empty? ; end ; end
