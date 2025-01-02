@@ -26,10 +26,11 @@ Gem::Specification.new do |s|
     s.add_dependency      "appl", "~>1"
   end
 
-  s.require_paths = %w(lib)
-  s.extensions    = %w()
-  s.files         = Dir[ "lib/**/*.rb", "bin/*", ]
-  s.executables   = %w(potp)
-  s.extra_rdoc_files  = %w(LICENSE README.md potp.gemspec)
+  s.require_paths    = %w(lib)
+  s.extensions       = %w()
+  s.files            = Dir[ "lib/**/*.rb", "bin/*", ]
+  s.executables      = %w(potp)
+  s.extra_rdoc_files = %w(LICENSE README.md potp.gemspec)
+
 end
 
