@@ -19,7 +19,7 @@ class POTP::Appl < Application
   NAME      = "potp"
   VERSION   = POTP::VERSION
   SUMMARY   = "Plain One Time Password Tool"
-  COPYRIGHT = "(C) 2024 Bertram Scharpf <software@bertram-scharpf.de>"
+  COPYRIGHT = "(C) 2025 Bertram Scharpf <software@bertram-scharpf.de>"
   LICENSE   = "BSD-2-Clause+"
   AUTHOR    = "Bertram Scharpf <software@bertram-scharpf.de>"
 
